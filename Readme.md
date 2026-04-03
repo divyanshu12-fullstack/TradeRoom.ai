@@ -57,6 +57,9 @@ This design keeps the system aggressive when opportunities are real, but conserv
 
 ## Architecture Overview
 
+<img width="831" height="453" alt="image" src="https://github.com/user-attachments/assets/8374cbf0-c2ac-4b1e-9399-8177392faf18" />
+
+
 TradeRoom.ai runs on two asynchronous tracks.
 
 ### 1) Data Firehose (Ingestion)
