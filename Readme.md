@@ -57,7 +57,7 @@ This design keeps the system aggressive when opportunities are real, but conserv
 
 ## Architecture Overview
 
-<img width="831" height="453" alt="image" src="https://github.com/user-attachments/assets/8374cbf0-c2ac-4b1e-9399-8177392faf18" />
+<img width="1600" height="872" alt="image" src="https://github.com/user-attachments/assets/7c7cb4a7-55f7-4d91-9274-66213b22f0e4" />
 
 
 TradeRoom.ai runs on two asynchronous tracks.
