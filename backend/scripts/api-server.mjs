@@ -130,6 +130,17 @@ const SPACETIME_SERVER = readRequiredEnv("SPACETIME_SERVER");
 const SPACETIME_DB_NAME = readRequiredEnv("SPACETIME_DB_NAME");
 const SPACETIME_BIN = process.env.SPACETIME_BIN || "spacetime";
 
+// Mem0 config (optional — falls back gracefully if not set)
+function readOptionalEnv(name) {
+    const fromProcess = String(process.env[name] || "").trim();
+    if (fromProcess) return fromProcess;
+    return String(rootEnv[name] || "").trim();
+}
+
+const MEM0_API_KEY = readOptionalEnv("MEM0_API_KEY");
+const MEM0_SWARM_USER_ID = readOptionalEnv("MEM0_SWARM_USER_ID") || "traderoom_swarm";
+const MEM0_SEARCH_URL = "https://api.mem0.ai/v1/memories/";
+
 const API_HOST = process.env.API_HOST || "0.0.0.0";
 const API_PORT = Number(process.env.API_PORT || "8787");
 
@@ -168,6 +179,7 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && url.pathname === "/api/state") {
         try {
+            // Core tables — required
             const [agents, shared, proposals, logs, decisions] = await Promise.all([
                 runSql("select agent_id,status,current_task,confidence,last_updated from agent;"),
                 runSql("select key,value,updated_at from shared_context;"),
@@ -175,6 +187,14 @@ const server = http.createServer(async (req, res) => {
                 runSql("select agent_id,decision,confidence,cycle_pass,timestamp from reasoning_log;"),
                 runSql("select verdict,summary,confidence,timestamp from decision_log;")
             ]);
+
+            // structured_memory is optional — may not exist until first cycle
+            let memory = [];
+            try {
+                memory = await runSql("select id,proposal_id,pattern,insight,decision,confidence,predicted_outcome,source_agent,realized_pnl,timestamp from structured_memory;");
+            } catch (_) {
+                // table may be empty or not yet populated
+            }
 
             return sendJson(res, 200, {
                 server: SPACETIME_SERVER,
@@ -184,9 +204,11 @@ const server = http.createServer(async (req, res) => {
                 proposals,
                 logs,
                 decisions,
+                memory,
                 fetchedAt: Date.now()
             });
         } catch (err) {
+            console.error("[api] state fetch failed:", err);
             return sendJson(res, 500, {
                 error: "state_fetch_failed",
                 detail: err?.message || String(err)
@@ -209,8 +231,55 @@ const server = http.createServer(async (req, res) => {
 
             return sendJson(res, 200, { ok: true, symbol });
         } catch (err) {
+            console.error("[api] run failed:", err);
             return sendJson(res, 500, {
                 error: "run_failed",
+                detail: err?.message || String(err)
+            });
+        }
+    }
+
+    // --- Mem0 long-term memory endpoint ---
+    if (req.method === "GET" && url.pathname === "/api/memories") {
+        if (!MEM0_API_KEY) {
+            return sendJson(res, 200, { memories: [], note: "MEM0_API_KEY not configured" });
+        }
+
+        try {
+            const https = await import("https");
+            const memUrl = new URL(MEM0_SEARCH_URL);
+            memUrl.searchParams.set("user_id", MEM0_SWARM_USER_ID);
+            memUrl.searchParams.set("limit", "100");
+
+            const data = await new Promise((resolve, reject) => {
+                const options = {
+                    hostname: memUrl.hostname,
+                    path: memUrl.pathname + memUrl.search,
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Token ${MEM0_API_KEY}`,
+                        "Content-Type": "application/json"
+                    }
+                };
+
+                const httpReq = https.default.request(options, (httpRes) => {
+                    let body = "";
+                    httpRes.on("data", chunk => body += chunk);
+                    httpRes.on("end", () => {
+                        try { resolve(JSON.parse(body)); }
+                        catch (e) { reject(new Error("invalid json from mem0: " + body.slice(0, 200))); }
+                    });
+                });
+                httpReq.on("error", reject);
+                httpReq.end();
+            });
+
+            // Mem0 returns either an array or { results: [] }
+            const memories = Array.isArray(data) ? data : (data.results || data.memories || []);
+            return sendJson(res, 200, { memories, total: memories.length, fetchedAt: Date.now() });
+        } catch (err) {
+            return sendJson(res, 500, {
+                error: "mem0_fetch_failed",
                 detail: err?.message || String(err)
             });
         }

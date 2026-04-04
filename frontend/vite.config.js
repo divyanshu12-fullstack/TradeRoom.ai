@@ -7,6 +7,20 @@ export default defineConfig(() => {
         server: {
             host: "0.0.0.0",
             port: 5173
+        },
+        resolve: {
+            alias: {
+                crypto: 'crypto-browserify',
+                stream: 'stream-browserify',
+                buffer: 'buffer'
+            }
+        },
+        optimizeDeps: {
+            esbuildOptions: {
+                define: {
+                    global: 'globalThis'
+                }
+            }
         }
     };
 });
