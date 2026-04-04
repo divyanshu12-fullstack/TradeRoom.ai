@@ -16,6 +16,7 @@ use crate::schema::trade::TradeProposal;
 
 #[spacetimedb::procedure]
 pub fn quant_think(ctx: &mut ProcedureContext, _arg: QuantSchedule) {
+    log::info!("[quant] think cycle starting");
     let (symbol, pattern, pass_no, proposal_id, ticker_text, unread) = ctx.with_tx(|tx_ctx| {
         let symbol = tx_ctx
             .db

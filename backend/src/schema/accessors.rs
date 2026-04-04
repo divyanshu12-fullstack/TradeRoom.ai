@@ -2,6 +2,8 @@ pub use super::agent::agent;
 pub use super::context::shared_context;
 pub use super::logs::{decision_log, reasoning_log};
 pub use super::market::{market_ticker, portfolio_position};
+// TODO: Uncomment after spacetime publish generates market_data accessors
+// pub use super::market_data::{market_live, market_context, ohlcv_history, market_news, analyst_signals};
 pub use super::memory::structured_memory;
 pub use super::messages::agent_messages;
 pub use super::risk::risk_limit;

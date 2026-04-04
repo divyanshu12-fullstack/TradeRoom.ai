@@ -3,6 +3,7 @@ pub mod accessors;
 pub mod context;
 pub mod logs;
 pub mod market;
+pub mod market_data;
 pub mod memory;
 pub mod messages;
 pub mod risk;

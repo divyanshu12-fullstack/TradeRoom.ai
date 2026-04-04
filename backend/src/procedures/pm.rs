@@ -14,6 +14,7 @@ use crate::schema::schedule::PmSchedule;
 
 #[spacetimedb::procedure]
 pub fn portfolio_manager_think(ctx: &mut ProcedureContext, _arg: PmSchedule) {
+    log::info!("[pm] think cycle starting");
     let (symbol, pattern, pass_no, proposal_id, thesis, ticker_text, limits_text, unread) =
         ctx.with_tx(|tx_ctx| {
             let symbol = tx_ctx
