@@ -16,8 +16,8 @@ Set these in root `.env`:
 - `MEM0_API_KEY`
 - `GEMINI_MODEL_NAME`
 - `MEM0_SWARM_USER_ID` (optional, defaults to `traderoom_swarm`)
-- `SPACETIME_SERVER` (default `maincloud`)
-- `SPACETIME_DB_NAME` (required for publish)
+- `SPACETIME_SERVER` (required)
+- `SPACETIME_DB_NAME` (required)
 - `API_PORT` (optional, defaults to `8787` for HTTP API)
 
 Template is in `.env.example`.
@@ -69,6 +69,7 @@ npm run api
 ```
 
 The service reads `SPACETIME_SERVER` and `SPACETIME_DB_NAME` from root `.env`.
+For testing, you can override env source with `API_ENV_FILE` (path relative to repo root).
 
 ## Notes
 

@@ -9,6 +9,9 @@ const execFileAsync = promisify(execFile);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "../..");
+const envFilePath = process.env.API_ENV_FILE
+    ? path.resolve(repoRoot, process.env.API_ENV_FILE)
+    : path.join(repoRoot, ".env");
 
 function parseEnvFile(filePath) {
     if (!fs.existsSync(filePath)) return {};
@@ -111,10 +114,20 @@ function readJsonBody(req) {
     });
 }
 
-const rootEnv = parseEnvFile(path.join(repoRoot, ".env"));
+const rootEnv = parseEnvFile(envFilePath);
 
-const SPACETIME_SERVER = process.env.SPACETIME_SERVER || rootEnv.SPACETIME_SERVER || "maincloud";
-const SPACETIME_DB_NAME = process.env.SPACETIME_DB_NAME || rootEnv.SPACETIME_DB_NAME || "traderoom";
+function readRequiredEnv(name) {
+    const fromProcess = String(process.env[name] || "").trim();
+    if (fromProcess) return fromProcess;
+
+    const fromFile = String(rootEnv[name] || "").trim();
+    if (fromFile) return fromFile;
+
+    throw new Error(`[api] missing required env var ${name}. Set it in root .env or shell env.`);
+}
+
+const SPACETIME_SERVER = readRequiredEnv("SPACETIME_SERVER");
+const SPACETIME_DB_NAME = readRequiredEnv("SPACETIME_DB_NAME");
 const SPACETIME_BIN = process.env.SPACETIME_BIN || "spacetime";
 
 const API_HOST = process.env.API_HOST || "0.0.0.0";
@@ -208,6 +221,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(API_PORT, API_HOST, () => {
     console.log(
-        `[api] listening on http://${API_HOST}:${API_PORT} (spacetime: ${SPACETIME_SERVER}/${SPACETIME_DB_NAME})`
+        `[api] listening on http://${API_HOST}:${API_PORT} (spacetime: ${SPACETIME_SERVER}/${SPACETIME_DB_NAME}, env: ${envFilePath})`
     );
 });
