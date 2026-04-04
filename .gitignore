@@ -1,4 +1,32 @@
-rules.md
-oldReadme.md
+# --- Environment / secrets ---
 .env
-backend/lib.rs
+.env.*
+!.env.example
+
+# --- Frontend dependencies and build output ---
+node_modules/
+dist/
+
+# --- Rust backend build output ---
+backend/target/
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Caches / coverage ---
+.cache/
+coverage/
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
