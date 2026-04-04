@@ -8,9 +8,12 @@ pub struct ReasoningLog {
     pub proposal_id: String,
     pub cycle_pass: u32,
     pub agent_id: String,
+    pub prompt: String,
     pub reasoning: String,
     pub decision: String,
     pub confidence: f32,
+    pub veto_reason: String,
+    pub risk_flags: String,
     pub has_conflict: bool,
     pub timestamp: u64,
 }

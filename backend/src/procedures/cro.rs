@@ -14,7 +14,7 @@ use crate::schema::schedule::CroSchedule;
 
 #[spacetimedb::procedure]
 pub fn cro_think(ctx: &mut ProcedureContext, _arg: CroSchedule) {
-    log::info!("[cro] think cycle starting");
+    log::info!("[cro] === DECISION GATE CYCLE STARTING ===");
     let (symbol, pattern, pass_no, proposal_id, proposal_text, max_size, max_vol, vol_now, unread) =
         ctx.with_tx(|tx_ctx| {
             let symbol = tx_ctx
@@ -186,6 +186,13 @@ pub fn cro_think(ctx: &mut ProcedureContext, _arg: CroSchedule) {
     let memory_to_store = parsed["memory_to_store"].as_str().unwrap_or("").to_string();
     let message_to_pm = parsed["message_to_pm"].as_str().unwrap_or("").to_string();
 
+    log::info!("[cro] --- AI RESPONSE RECEIVED ---");
+    log::info!("[cro] Proposal: {} | AI Verdict: {} | Confidence: {:.2}", proposal_id, verdict, confidence);
+    log::info!("[cro] Reasoning: {}", reasoning);
+    if !risk_flags.is_empty() {
+        log::info!("[cro] Risk Flags from AI: {}", risk_flags);
+    }
+
     let mut approved = verdict == "APPROVE";
     let hard_limit_hit = ctx.with_tx(|tx_ctx| {
         tx_ctx
@@ -198,12 +205,38 @@ pub fn cro_think(ctx: &mut ProcedureContext, _arg: CroSchedule) {
     });
 
     if hard_limit_hit {
+        let breach_reason = if ctx.with_tx(|tx_ctx| {
+            tx_ctx
+                .db
+                .trade_proposal()
+                .proposal_id()
+                .find(proposal_id.clone())
+                .map(|p| p.size > max_size)
+                .unwrap_or(false)
+        }) {
+            format!("position size {} exceeds max {}",
+                ctx.with_tx(|tx_ctx| {
+                    tx_ctx
+                        .db
+                        .trade_proposal()
+                        .proposal_id()
+                        .find(proposal_id.clone())
+                        .map(|p| p.size)
+                        .unwrap_or(0.0)
+                }),
+                max_size)
+        } else {
+            format!("volatility {:.4} exceeds max {:.4}", vol_now, max_vol)
+        };
+
         approved = false;
         verdict = "VETO".to_string();
+        log::warn!("[cro] HARD LIMIT BREACH: {} for proposal {}", breach_reason, proposal_id);
+
         if veto_reason.is_empty() {
-            veto_reason = "hard risk limit breach".to_string();
+            veto_reason = format!("hard_limit_breach: {}", breach_reason);
         } else {
-            veto_reason = format!("{} | hard risk limit breach", veto_reason);
+            veto_reason = format!("{} | hard_limit_breach: {}", veto_reason, breach_reason);
         }
     }
 
@@ -238,9 +271,12 @@ pub fn cro_think(ctx: &mut ProcedureContext, _arg: CroSchedule) {
             proposal_id: proposal_id.clone(),
             cycle_pass: pass_no,
             agent_id: "cro".to_string(),
+            prompt: prompt.clone(),
             reasoning: reasoning.clone(),
-            decision: format!("{} {} | flags:{}", verdict, veto_reason, risk_flags),
+            decision: verdict.clone(),
             confidence,
+            veto_reason: veto_reason.clone(),
+            risk_flags: risk_flags.clone(),
             has_conflict: !approved,
             timestamp: now,
         });
@@ -288,6 +324,18 @@ pub fn cro_think(ctx: &mut ProcedureContext, _arg: CroSchedule) {
             });
         }
     });
+
+    log::info!("[cro] === DECISION GATE RESULT ===");
+    log::info!("[cro] Proposal: {} | Pass: {}", proposal_id, pass_no);
+    log::info!("[cro] Final Verdict: {} | Confidence: {:.2}", verdict, confidence);
+    log::info!("[cro] Reasoning: {}", reasoning);
+    if !veto_reason.is_empty() {
+        log::info!("[cro] Veto Reason: {}", veto_reason);
+    }
+    if !risk_flags.is_empty() {
+        log::info!("[cro] Risk Flags: {}", risk_flags);
+    }
+    log::info!("[cro] Status: {} (Pass {})", if approved { "APPROVED" } else { "VETOED" }, pass_no);
 
     crate::procedures::cycle::check_and_finalize_cycle(ctx);
 }
