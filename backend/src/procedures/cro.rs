@@ -14,6 +14,7 @@ use crate::schema::schedule::CroSchedule;
 
 #[spacetimedb::procedure]
 pub fn cro_think(ctx: &mut ProcedureContext, _arg: CroSchedule) {
+    log::info!("[cro] think cycle starting");
     let (symbol, pattern, pass_no, proposal_id, proposal_text, max_size, max_vol, vol_now, unread) =
         ctx.with_tx(|tx_ctx| {
             let symbol = tx_ctx

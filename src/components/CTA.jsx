@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 
-export default function CTA() {
+export default function CTA({ onViewDemo }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -33,10 +33,10 @@ export default function CTA() {
               and qualified human oversight on all execution decisions.
             </p>
             <div className="flex items-center gap-3">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="btn-primary">
-                View on GitHub <ChevronRight className="w-3.5 h-3.5" />
-              </a>
-              <a href="#solution" className="btn-ghost">Architecture Docs</a>
+              <button onClick={onViewDemo} className="btn-primary">
+                Launch Live Demo <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="btn-ghost">View on GitHub</a>
             </div>
           </motion.div>
 

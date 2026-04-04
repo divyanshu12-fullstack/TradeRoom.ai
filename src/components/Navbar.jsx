@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: 'Docs', href: '#' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ currentView, onViewDemo, onNavigateHome }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -29,7 +29,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
         {/* Logo — minimal wordmark */}
-        <a href="#" className="flex items-center gap-2.5">
+        <a href="#" className="flex items-center gap-2.5 cursor-pointer" onClick={onNavigateHome}>
           <div className="w-5 h-5 border border-[#00D4AA] flex items-center justify-center">
             <div className="w-2.5 h-2.5 bg-[#00D4AA]" />
           </div>
@@ -53,7 +53,9 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <a href="#" className="btn-ghost text-xs">View Demo</a>
+          <button onClick={onViewDemo} className="btn-ghost text-xs">
+            {currentView === 'demo' ? 'Back to Landing' : 'View Demo'}
+          </button>
           <a href="#" className="btn-primary text-xs">
             Request Access <ChevronRight className="w-3.5 h-3.5" />
           </a>

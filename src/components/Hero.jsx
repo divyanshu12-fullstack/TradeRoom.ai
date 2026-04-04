@@ -56,7 +56,7 @@ function AgentColor({ agent }) {
   return <span>{agent}</span>
 }
 
-export default function Hero() {
+export default function Hero({ onViewDemo }) {
   // Index-based approach: never mutate to an empty array, so log is never undefined
   const [headIdx, setHeadIdx] = useState(3)
   const [cursor, setCursor] = useState(true)
@@ -140,11 +140,11 @@ export default function Hero() {
               transition={{ duration: 0.4, delay: 0.18 }}
               className="flex items-center gap-3 mb-12"
             >
-              <a href="#solution" className="btn-primary">
-                View Architecture <ChevronRight className="w-3.5 h-3.5" />
-              </a>
-              <a href="#how-it-works" className="btn-ghost">
-                System Pipeline
+              <button onClick={onViewDemo} className="btn-primary">
+                Launch Live Demo <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+              <a href="#solution" className="btn-ghost">
+                View Architecture
               </a>
             </motion.div>
 

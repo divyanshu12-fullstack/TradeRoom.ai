@@ -1,0 +1,46 @@
+2026-04-04T13:14:10.804878Z  INFO: Creating table `agent`
+2026-04-04T13:14:10.805264Z  INFO: Creating table `agent_messages`
+2026-04-04T13:14:10.805523Z  INFO: Creating table `cro_schedule`
+2026-04-04T13:14:10.805783Z  INFO: Creating table `decision_log`
+2026-04-04T13:14:10.806004Z  INFO: Creating table `market_ticker`
+2026-04-04T13:14:10.806181Z  INFO: Creating table `pattern_schedule`
+2026-04-04T13:14:10.806381Z  INFO: Creating table `pm_schedule`
+2026-04-04T13:14:10.806585Z  INFO: Creating table `portfolio_position`
+2026-04-04T13:14:10.806738Z  INFO: Creating table `quant_schedule`
+2026-04-04T13:14:10.806958Z  INFO: Creating table `reasoning_log`
+2026-04-04T13:14:10.807205Z  INFO: Creating table `risk_limit`
+2026-04-04T13:14:10.807333Z  INFO: Creating table `shared_context`
+2026-04-04T13:14:10.807510Z  INFO: Creating table `structured_memory`
+2026-04-04T13:14:10.807786Z  INFO: Creating table `trade_proposal`
+2026-04-04T13:14:10.808064Z  INFO: Creating table `trade_result`
+2026-04-04T13:14:10.810878Z  INFO: Invoking `init` reducer
+2026-04-04T13:14:10.811035Z  INFO: init src\reducers\init.rs:64: [traderoom] init complete
+2026-04-04T13:14:10.813595Z  INFO: Database initialized
+2026-04-04T13:15:52.599500Z ERROR: launch_trade_cycle: External attempt to call reducer "launch_trade_cycle" failed, invalid arguments.
+This is likely due to a mismatched client schema, have you run `spacetime generate` recently?
+2026-04-04T13:16:55.515691Z ERROR: launch_trade_cycle: External attempt to call reducer "launch_trade_cycle" failed, invalid arguments.
+This is likely due to a mismatched client schema, have you run `spacetime generate` recently?
+2026-04-04T13:17:39.519333Z  INFO: launch_trade_cycle src\reducers\launch.rs:101: [traderoom] cycle launched for BTCUSDT
+2026-04-04T13:17:40.320813Z  INFO: pattern_extractor_think src\procedures\pattern.rs:134: [pattern] BTCUSDT no clear pattern neutral
+2026-04-04T13:17:40.321569Z  INFO: quant_think src\procedures\quant.rs:19: [quant] think cycle starting
+2026-04-04T13:17:44.121458Z  INFO: portfolio_manager_think src\procedures\pm.rs:17: [pm] think cycle starting
+2026-04-04T13:17:48.121597Z  INFO: cro_think src\procedures\cro.rs:17: [cro] think cycle starting
+2026-04-04T13:17:51.455923Z  INFO: quant_think src\procedures\quant.rs:19: [quant] think cycle starting
+2026-04-04T13:17:54.172928Z  INFO: portfolio_manager_think src\procedures\pm.rs:17: [pm] think cycle starting
+2026-04-04T13:17:57.519135Z  INFO: cro_think src\procedures\cro.rs:17: [cro] think cycle starting
+2026-04-04T13:18:00.724328Z  INFO: quant_think src\procedures\quant.rs:19: [quant] think cycle starting
+2026-04-04T13:18:04.475624Z  INFO: portfolio_manager_think src\procedures\pm.rs:17: [pm] think cycle starting
+2026-04-04T13:18:06.676774Z ERROR: launch_trade_cycle: External attempt to call reducer "launch_trade_cycle" failed, invalid arguments.
+This is likely due to a mismatched client schema, have you run `spacetime generate` recently?
+2026-04-04T13:18:08.186286Z  INFO: cro_think src\procedures\cro.rs:17: [cro] think cycle starting
+2026-04-04T13:18:26.920570Z  INFO: launch_trade_cycle src\reducers\launch.rs:101: [traderoom] cycle launched for BTCUSDT
+2026-04-04T13:18:27.524239Z  INFO: pattern_extractor_think src\procedures\pattern.rs:134: [pattern] BTCUSDT testing mixed
+2026-04-04T13:18:27.525468Z  INFO: quant_think src\procedures\quant.rs:19: [quant] think cycle starting
+2026-04-04T13:18:31.522930Z  INFO: portfolio_manager_think src\procedures\pm.rs:17: [pm] think cycle starting
+2026-04-04T13:18:35.522736Z  INFO: cro_think src\procedures\cro.rs:17: [cro] think cycle starting
+2026-04-04T13:18:39.151249Z  INFO: quant_think src\procedures\quant.rs:19: [quant] think cycle starting
+2026-04-04T13:18:42.443645Z  INFO: portfolio_manager_think src\procedures\pm.rs:17: [pm] think cycle starting
+2026-04-04T13:18:45.951002Z  INFO: cro_think src\procedures\cro.rs:17: [cro] think cycle starting
+2026-04-04T13:18:49.326980Z  INFO: quant_think src\procedures\quant.rs:19: [quant] think cycle starting
+2026-04-04T13:18:52.261943Z  INFO: portfolio_manager_think src\procedures\pm.rs:17: [pm] think cycle starting
+2026-04-04T13:18:57.624849Z  INFO: cro_think src\procedures\cro.rs:17: [cro] think cycle starting
