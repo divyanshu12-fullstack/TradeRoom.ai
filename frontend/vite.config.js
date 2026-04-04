@@ -1,26 +1,11 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
-export default defineConfig(() => {
-    return {
-        plugins: [react()],
-        server: {
-            host: "0.0.0.0",
-            port: 5173
-        },
-        resolve: {
-            alias: {
-                crypto: 'crypto-browserify',
-                stream: 'stream-browserify',
-                buffer: 'buffer'
-            }
-        },
-        optimizeDeps: {
-            esbuildOptions: {
-                define: {
-                    global: 'globalThis'
-                }
-            }
-        }
-    };
-});
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+})
