@@ -8,7 +8,7 @@ const AGENTS = [
   { id: 'cro', backendId: 'cro', label: 'Chief Risk Officer', blurb: 'Veto and controls', color: '#F0A020', icon: ShieldAlert }
 ]
 
-const API_BASE = "http://localhost:8787"
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8787";
 
 function apiUrl(endpoint) {
   const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`

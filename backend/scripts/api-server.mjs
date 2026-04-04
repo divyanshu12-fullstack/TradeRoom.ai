@@ -142,7 +142,7 @@ const MEM0_SWARM_USER_ID = readOptionalEnv("MEM0_SWARM_USER_ID") || "traderoom_s
 const MEM0_SEARCH_URL = "https://api.mem0.ai/v1/memories/";
 
 const API_HOST = process.env.API_HOST || "0.0.0.0";
-const API_PORT = Number(process.env.API_PORT || "8787");
+const API_PORT = Number(process.env.PORT || process.env.API_PORT || "8787");
 
 async function runSpacetime(args) {
     const { stdout } = await execFileAsync(SPACETIME_BIN, args, {

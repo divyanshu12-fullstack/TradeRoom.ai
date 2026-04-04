@@ -1,33 +1,32 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronRight } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ChevronRight } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Architecture', href: '#solution' },
   { label: 'Pipeline', href: '#how-it-works' },
   { label: 'Stack', href: '#tech-stack' },
   { label: 'Docs', href: '#' },
-]
+];
 
 export default function Navbar({ currentView, onViewDemo, onNavigateHome }) {
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 30)
-    window.addEventListener('scroll', fn)
-    return () => window.removeEventListener('scroll', fn)
-  }, [])
+    const fn = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
 
   return (
     <header
-      className={`transition-colors duration-300 w-full ${
-        scrolled
-          ? 'bg-[#0A0B0D] border-b border-[rgba(255,255,255,0.07)]'
-          : 'bg-[#0A0B0D]/80 backdrop-blur-sm border-b border-transparent'
-      }`}
+      className={`transition-colors duration-300 w-full ${scrolled
+        ? 'bg-[#0A0B0D] border-b border-[rgba(255,255,255,0.07)]'
+        : 'bg-[#0A0B0D]/80 backdrop-blur-sm border-b border-transparent'
+        }`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 py-10 h-14 flex items-center justify-between">
         {/* Logo — minimal wordmark */}
         <a href="#" className="flex items-center gap-2.5 cursor-pointer" onClick={onNavigateHome}>
           <div className="w-5 h-5 border border-[#00D4AA] flex items-center justify-center">
@@ -96,5 +95,5 @@ export default function Navbar({ currentView, onViewDemo, onNavigateHome }) {
         )}
       </AnimatePresence>
     </header>
-  )
+  );
 }
