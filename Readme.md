@@ -6,6 +6,10 @@ TradeRoom.ai is built around one simple idea: trading systems should think fast,
 
 The result is a system that can react to live markets, keep context over time, and avoid repeating the same expensive mistakes.
 
+## Demo Video
+
+[![Watch Demo](https://img.shields.io/badge/▶%20Watch-Demo%20Video-red?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1QBkchdGXTZjmLBb3eegzK0fzdz9XfHQR/view?usp=sharing)
+
 ## Why This Problem Is Big
 
 In modern markets, decisions must be made in seconds or less. But those decisions are not just about price.
